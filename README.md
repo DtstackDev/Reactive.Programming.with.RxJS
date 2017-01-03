@@ -19,11 +19,11 @@
 
 1. Zhe Reactive Way
 
-2. Deep in the Sequence
+2. Deep in the Sequence（@zhaomiing）
 
-3. Building Concurrent Programs
+3. Building Concurrent Programs (@zhaomiing)
 
-4. Building a Complete Web Application
+4. Building a Complete Web Application (@zhaomiing)
 
 5. Bending Time with Schedulers
 
