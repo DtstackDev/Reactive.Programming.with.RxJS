@@ -17,7 +17,7 @@
 
 # 目录
 
-1. Zhe Reactive Way
+1. Zhe Reactive Way (@bengle)
 
 2. Deep in the Sequence（@zhaomiing）
 
