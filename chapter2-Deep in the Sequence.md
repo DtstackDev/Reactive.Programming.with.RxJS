@@ -89,7 +89,37 @@ upper.subscribe(logValue);
 
 这段代码还有下面的代码，都使用的 `logValue` 函数：
 
-`var logValue = function(val) { console.log(val) };`
+```javascript
+var logValue = function(val) { console.log(val) };
+```
 
 我们可以用其他函数替换传入 `map` 的 `logValue` 函数来做一些异步计算去转换Observable的值。但那样的话，`map` 并不会像我们预期的那样工作。
 更好的方式是使用22页提到的 `flatMap`。
+
+### Filter
+
+`filter` 接收一个Observable和一个判断函数，然后用这个函数测试Observable中的每一个值。最后返回一个包含了所有测试结果为true的元素的Observable
+队列。
+
+![marble_filter](illustrates/2.4.png)
+
+```javascript
+var isEven = (function(val) { return val % 2 !== 0; });
+```
+
+```javascript
+// js array
+var src = [1, 2, 3, 4, 5];
+var even = src.filter(isEven);
+
+even.forEach(logValue);
+```
+```javascript
+// Observables
+var src = Rx.Observable.range(1, 5);
+var even = src.filter(isEven);
+
+even.subscribe(logValue);
+```
+
+### Reduce
