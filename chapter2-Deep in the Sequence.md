@@ -186,7 +186,7 @@ var subscription = avg.subscribe(function(x) {
 > 假设我们正在写一个程序来显示用户步行时的平均速度。即使用户还没用停止步行，我们也需要根据目前为止的数据计算平均值。我们想要实时记录一个
 无限队列的当前平均值。问题是如果队列还没结束，像`reduce`这样的聚合操作符就不会去调用Observable的`onNext`方法。   
 > 幸好，RxJS团队已经考虑到这种情况从而为我们提供了`scan`操作符，它和`reduce`一样但可以生成中间的结果。   
->
+
 ```javascript
 var avg = Rx.Observable.interval(1000).scan(function (prev, cur) {
   return {
