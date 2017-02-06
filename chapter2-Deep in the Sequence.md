@@ -123,3 +123,29 @@ even.subscribe(logValue);
 ```
 
 ### Reduce
+
+`reduce`(也被称作 *folder*) 接收一个Observable，然后返回一个只包含一个元素的新的Observable，这个元素是在源Observable的各个元素上
+应用同一个函数的结果。该函数接收一个当前元素与一个自己上轮调用的结果作为该轮调用的参数。
+
+![marble_reduce](illustrates/2.5.png)
+
+```javascript
+// js array
+var src = [1, 2, 3, 4, 5];
+var sum = src.reduce(function(a, b) { 
+  return a + b;
+});
+
+console.log(sum);
+```
+
+```javascript
+// Observables
+var src = Rx.Observable.range(1, 5); 
+var sum = src.reduce(function(acc, x) {
+  return acc + x; 
+});
+
+sum.subscribe(logValue);
+```
+`reduce`是个强大的操作队列的操作符。事实上，它也是整个被称作*总数操作符（aggregate operators）*子集的实现基础。
