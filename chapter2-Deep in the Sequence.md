@@ -4,8 +4,8 @@
 要取得胜利你必须发挥自己的创造性。
 
 我认为使用 Observable 队列和玩这个游戏之间其实是有很多相似之处的。Observables 就是一些*事件流*，我们可以对其进行转化，合并，查询等
-操作。不管我是在处理简单的ajax回调，还是node.js的数据流（processing gigabytes of data），我们声明*流*的方式都是相同的。一旦我们
-接受了*流*的设定，我们程序的复杂性也就随之降低了。
+操作。不管我是在处理简单的ajax回调，还是node.js的数据流（processing gigabytes of data），我们声明*流*的方式都是相同的。
+一旦我们接受了*流*的设定，我们程序的复杂性也就随之降低了。
 
 在这一章中我们将讨论如果在程序中高效的使用队列。目前为止我们已经讲过如何创建 Observable 并且在其上执行一些间的操作。为了从分发挥其能力，
 我们必须把程序的输入和输出转换成队列来模拟我们的程序流。
@@ -148,4 +148,59 @@ var sum = src.reduce(function(acc, x) {
 
 sum.subscribe(logValue);
 ```
-`reduce`是个强大的操作队列的操作符。事实上，它也是整个被称作*总数操作符（aggregate operators）*子集的实现基础。
+`reduce`是个强大的操作队列的操作符。事实上，它也是整个被称作*聚合操作符（aggregate operators）*子集的实现基础。
+
+### Aggregate Operators
+
+聚合操作符（aggregate operators）处理一个队列然后返回一个值 `Rx.Observable.first` 接收一个 Observable 和一个可选的断言函数，
+然后返回Observable中满足该断言的第一个元素。
+
+计算队列元素的平均值也是一种聚合操作，RxJS提供了这种操作符`average`，但是由于这部份讲 reduce的原因，我们想看看如何用`reduce`来实现它。
+每一个聚合操作符都能过只用`reduce`来实现。
+
+```javascript
+var avg = Rx.Observable.range(0, 5).reduce(function(prev, cur) {
+  return {
+    sum: prev.sum + cur, 
+    count: prev.count + 1
+  };
+}, { sum: 0, count: 0 })
+.map(function(o) {
+  return o.sum / o.count; 
+});
+
+var subscription = avg.subscribe(function(x) { 
+  console.log('Average is: ', x);
+});
+```
+> Average is: 2
+
+在这段代码中我们使用 `reduce` 来把每一个新的值加到前一个上面。由于reduce没有提供队列中元素总数，我们需要额外记录它们的数量。我们调用
+`reduce`的时候给了一个初始化的值，它是一个由sum和count两个字段组成的对象，我们可以用来存储当前元素的总和与数量。每一个元素都会返回更
+新后的对象。
+
+当队列结束，`reduce` 将会使用最终的总和与最总数量来调用`onNext`方法。这事我们可以使用`map`来返回两者想出的结果，即为平均数。
+
+> Joe Asks:   
+> ### 可以聚合无限Observable吗？   
+> 假设我们正在写一个程序来显示用户步行时的平均速度。即使用户还没用停止步行，我们也需要根据目前为止的数据计算平均值。我们想要实时记录一个
+无限队列的当前平均值。问题是如果队列还没结束，像`reduce`这样的聚合操作符就不会去调用Observable的`onNext`方法。   
+> 幸好，RxJS团队已经考虑到这种情况从而为我们提供了`scan`操作符，它和`reduce`一样但可以生成中间的结果。   
+>
+```javascript
+var avg = Rx.Observable.interval(1000).scan(function (prev, cur) {
+  return {
+    sum: prev.sum + cur, 
+    count: prev.count + 1
+  };
+}, { sum: 0, count: 0 }) 
+.map(function(o) {
+  return o.sum / o.count;
+});
+
+var subscription = avg.subscribe( function (x) { 
+  console.log(x);
+});
+```
+> 这样我们就可以聚合需要很长时间才能完成的或者无限队列。在上面的例子中我们每秒生成一个递增的数值并且用`scan`替换了之前的`reduce`。
+现在我们就可以每秒获得当前生成的所有值的平均数了。
