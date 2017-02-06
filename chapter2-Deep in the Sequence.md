@@ -54,3 +54,42 @@ Rx.Observable.merge(a, b).subscribe(function(x) {
 不同 Observable 的元素在同一时间生成出来的话，则它们在合并后的队列中的顺序是随机的。
 
 ## 基础队列操作符
+
+在RxJS中有很多有用于转换Observable的操作符，最常用的还是那些任何提供了正式集合处理能力的编程语言都包含的方法:`map`、`filter` 和 `reduce`。
+在 JavaScript 中你能在数值对象上找到这些个方法。
+
+RxJS 遵循了 JavaScript 的惯例，所以你会发现下面说的操作符的语法几乎和数值方法一样。事实上，我们会展示用数组和Observable的两种实现方法，你会
+看到它们是如此相似。
+
+### Map
+
+map 是最常用到的队列转化操作符。它接收一个Observable和一个函数，然后在源Observable中的每个元素上应用这个函数，最后返回一个新的包含转换之后
+值的 Observable。
+
+![marble_map](illustrates/2.3.png)
+
+```javascript
+// js array
+var src = [1, 2, 3, 4, 5];
+var upper = src.map(function(name) {
+  return name * 2; 
+});
+upper.forEach(logValue);
+```
+```javascript
+// Observables
+var src = Rx.Observable.range(1, 5); 
+var upper = src.map(function(name) {
+  return name * 2; 
+});
+upper.subscribe(logValue);
+```
+
+在两种情况下， `src` 都没有改变。
+
+这段代码还有下面的代码，都使用的 `logValue` 函数：
+
+`var logValue = function(val) { console.log(val) };`
+
+我们可以用其他函数替换传入 `map` 的 `logValue` 函数来做一些异步计算去转换Observable的值。但那样的话，`map` 并不会像我们预期的那样工作。
+更好的方式是使用22页提到的 `flatMap`。
