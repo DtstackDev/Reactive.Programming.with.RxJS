@@ -22,7 +22,7 @@
 
 它的Marble图则是这样的：
 
-![marble_range](illustrates/2.1.png)
+![marble_range](illustrations/2.1.png)
 
 如图，长箭头标识 Observable，x轴表示时间。每一个圆圈表示 Observable 内部调用 `onNext()` 生成的整数值。在生成了第三个值以后，`range`
 调用 `onCompleted`，在图上表示为一条竖线。
@@ -48,7 +48,7 @@ Rx.Observable.merge(a, b).subscribe(function(x) {
 
 `merge` 操作符的 marble 图如下所示：
 
-![marble_merge](illustrates/2.2.png)
+![marble_merge](illustrations/2.2.png)
 
 这里，沿y轴的虚线箭头指向了作用在队列A B中每个元素上的转化的最终结果。生成后的 Observable 表示为 C，其中包含了 A B 中合并后的元素。如果
 不同 Observable 的元素在同一时间生成出来的话，则它们在合并后的队列中的顺序是随机的。
@@ -66,7 +66,7 @@ RxJS 遵循了 JavaScript 的惯例，所以你会发现下面说的操作符的
 map 是最常用到的队列转化操作符。它接收一个Observable和一个函数，然后在源Observable中的每个元素上应用这个函数，最后返回一个新的包含转换之后
 值的 Observable。
 
-![marble_map](illustrates/2.3.png)
+![marble_map](illustrations/2.3.png)
 
 ```javascript
 // js array
@@ -101,7 +101,7 @@ var logValue = function(val) { console.log(val) };
 `filter` 接收一个Observable和一个判断函数，然后用这个函数测试Observable中的每一个值。最后返回一个包含了所有测试结果为true的元素的Observable
 队列。
 
-![marble_filter](illustrates/2.4.png)
+![marble_filter](illustrations/2.4.png)
 
 ```javascript
 var isEven = (function(val) { return val % 2 !== 0; });
@@ -127,7 +127,7 @@ even.subscribe(logValue);
 `reduce`(也被称作 *folder*) 接收一个Observable，然后返回一个只包含一个元素的新的Observable，这个元素是在源Observable的各个元素上
 应用同一个函数的结果。该函数接收一个当前元素与一个自己上轮调用的结果作为该轮调用的参数。
 
-![marble_reduce](illustrates/2.5.png)
+![marble_reduce](illustrations/2.5.png)
 
 ```javascript
 // js array
@@ -213,7 +213,7 @@ var subscription = avg.subscribe( function (x) {
 `flatMap` 接收一个其中所有元素也都是Observable的Observable A，然后返回一个结果是A中的子Observable ‘压平’ 后的元素的新的Observable
 。我们通过可视化图形来一看究竟。
 
-![marble_flatMap](illustrates/2.6.png)
+![marble_flatMap](illustrations/2.6.png)
 
 我们可以看到A中的每一个元素(A1,A2,A3)也都是Observable队列。当我们用一个转换函数对A执行`flatMap`操作时，我们就的到了一个新的Observable，
 其元素是原来A中的不同子Observable所有元素的集合。
