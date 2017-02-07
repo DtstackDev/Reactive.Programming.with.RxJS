@@ -204,3 +204,37 @@ var subscription = avg.subscribe( function (x) {
 ```
 > 这样我们就可以聚合需要很长时间才能完成的或者无限队列。在上面的例子中我们每秒生成一个递增的数值并且用`scan`替换了之前的`reduce`。
 现在我们就可以每秒获得当前生成的所有值的平均数了。
+
+### flatMap
+
+那么，如果一个Observable执行的结果是更多的其他的Observable该怎么办呢？一般来说，你会想要把所有嵌套Observable中的元素都统一到
+一个单独的队列中去。而`flatMap`就是干这事儿的。
+
+`flatMap` 接收一个其中所有元素也都是Observable的Observable A，然后返回一个结果是A中的子Observable ‘压平’ 后的元素的新的Observable
+。我们通过可视化图形来一看究竟。
+
+![marble_flatMap](illustrates/2.6.png)
+
+我们可以看到A中的每一个元素(A1,A2,A3)也都是Observable队列。当我们用一个转换函数对A执行`flatMap`操作时，我们就的到了一个新的Observable，
+其元素是原来A中的不同子Observable所有元素的集合。
+
+`flatMap`是一个强大的操作符，与此同时它也比我们至今学过的所有操作符更加难以理解。可以把它想成Observable的 `concatAll()`。
+
+`concatAll` 是这样一个函数，它接收一个二维数组，然后返回一个一维数组，其中的元素是将原本所有子数组压平后的元素的集合而非子数组本身。
+我们可以用`reduce`来实现这样一个函数。
+
+```javascript
+function concatAll(source) {
+  return source.reduce(function(a, b) {
+    return a.concat(b); 
+  });
+}
+
+concatAll([[0, 1, 2], [3, 4, 5], [6, 7, 8]]);
+```
+> [0, 1, 2, 3, 4, 5, 6, 7, 8]
+
+`flatMap` 做了同样的事情，但是处理的是Observables而非数组。它接收一个源Observable和返回新Observable的一个函数，然后在源Observable
+的每一个元素上应用这个函数，就像`map`一样。如果事情就此打住，我们最终得到了一个可以生成Observable的Observable。但是 `flatMap`还会向
+主队列中‘生成’由各个新的Observable生成的值，把所有Observable压平到一个主队列中去。最终，我们得到了一个单独的Observable。
+
