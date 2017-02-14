@@ -17,7 +17,7 @@
 
 # 目录
 
-1. Zhe Reactive Way (@bengle)
+1. Zhe Reactive Way (@bengle, 已基本翻译完，可校对)
 
 2. Deep in the Sequence（@zhaomiing）
 
