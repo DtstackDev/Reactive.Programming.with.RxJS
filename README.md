@@ -25,9 +25,9 @@
 
 4. Building a Complete Web Application (@zhaomiing)
 
-5. Bending Time with Schedulers
+5. Bending Time with Schedulers (@charlesmind)
 
-6. Reactive Web Applications with Cycle.js
+6. Reactive Web Applications with Cycle.js(@charlesmind)
 
 # 联系方式
 
